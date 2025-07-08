@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Здравствуйте, {{request.bitrix_user.first_name}} {{request.bitrix_user.last_name}}</h1>
+    <a href="/deals/show_deals/">Последние сделки<br></a>
+    <a href="/deals/create_deal">Создать новую сделку</a>
+
+    {% block title %}
+    {% endblock %}
+    {% block header %}
+    {% endblock %}
+    {% block content %}
+    {% endblock %}
+<script src="https://api.bitrix24.com/api/v1/"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<form action="/deals/create_deal/" method="post">
+    {% csrf_token %}
+    <label>Название сделки:</label><br>
+    <input type="text" name="title"><br><br>
+
+    <label>Сумма сделки:</label><br>
+    <input type="text" name="opportunity"><br><br>
+
+    <label>Кастомное поле (Доп. примечание):</label><br>
+    <input type="text" name="custom_note"><br><br>
+
+    <button type="submit">Создать сделку</button>
+</form>
+        <button onclick="document.location='{% url 'reload_start'%}'">Назад</button>

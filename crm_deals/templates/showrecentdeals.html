@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+
+{% block title %}
+    Последние активные сделки
+{% endblock %}
+
+{% block header %}
+    <div class="header">
+        <h1>Последние активные сделки</h1>
+        <h2>Всего найдено {{ recent_deals|length }} сделок</h2>
+        <button onclick="document.location='{% url 'reload_start'%}'">Назад</button>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Этап</th>
+        <th>Бюджет</th>
+        <th>Дата создания</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for deal in recent_deals %}
+      <tr>
+        <td>{{ deal.ID }}</td>
+        <td>{{ deal.TITLE }}</td>
+        <td>{{ deal.STAGE_ID }}</td>
+        <td>{{ deal.OPPORTUNITY }}</td>
+        <td>{{ deal.DATE_CREATE }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
