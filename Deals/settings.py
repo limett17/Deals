@@ -3,6 +3,10 @@ from pathlib import Path
 
 APP_SETTINGS = None
 
+ADMINS = (
+    ('img', 'img@it-solution.ru'),
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +32,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bitrix_widget',
+
+    'integration_utils.bitrix24',
+    'integration_utils.its_utils.app_gitpull',
 ]
 
 MIDDLEWARE = [
@@ -133,5 +141,7 @@ if not APP_SETTINGS:
         application_index_path='/',
     )
 
+from integration_utils.its_utils.mute_logger import MuteLogger
+ilogger = MuteLogger()
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
