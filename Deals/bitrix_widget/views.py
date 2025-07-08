@@ -7,7 +7,8 @@ from django.conf import settings
 @main_auth(on_start=True, set_cookie=True)
 def index(request):
     app_settings = settings.APP_SETTINGS
-    print(request.GET)
+    user = request.bitrix_user
+
     return render(request, 'bitrix_widget/index.html', locals())
 
 
