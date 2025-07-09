@@ -7,14 +7,20 @@ def create_deal(request):
     if request.method == "POST":
         title = request.POST.get("title")
         opportunity = request.POST.get("opportunity")
-        custom_note = request.POST.get("custom_note")
+        delivery_method = request.POST.get("delivery_method")
+        delivery_date = request.POST.get("delivery_date")
+        delivery_time = request.POST.get("delivery_time")
+        delivery_instructions = request.POST.get("delivery_instructions")
 
         user_token = request.bitrix_user_token
         res = user_token.call_api_method("crm.deal.add", {
             "fields": {
                 "TITLE": title,
                 "OPPORTUNITY": opportunity,
-                "UF_CRM_MY_STRING": custom_note
+                "UF_CRM_1752059330": delivery_method,
+                "UF_CRM_1752056545": delivery_date,
+                "UF_CRM_1752057390": delivery_time,
+                "UF_CRM_1752056648": delivery_instructions
             }
         })
 
