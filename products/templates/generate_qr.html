@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+
+{% block title %}
+    Генерация QR-кода по ID товара
+{% endblock %}
+
+{% block header %}
+    <div class="header">
+        <h1>Генерация QR-кода по ID товара</h1>
+        <h2>Введите ID товара. Затем нажмите "Сгенерировать". Вы получите QR-код для своего товара.</h2>
+        <button onclick="document.location='{% url 'reload_start'%}'">В начало</button>
+    </div>
+    {% if error %}
+        <p style="color: red;">Ошибка: {{ error }}</p>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+    <button type="submit">Сгенерировать</button>
+    </form>
+{% if generated_url %}
+    <h2>Ссылка:</h2>
+    <p><a href="{{ generated_url }}">{{generated_url}}</a></p>
+
+    <h2>QR-код:</h2>
+    <img src="{{ qr_image_base64 }}" alt="QR-code">
+{% endif %}
+{% endblock %}

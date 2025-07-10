@@ -1,0 +1,16 @@
+<h1>{{ id }} {{ name }}</h1>
+
+{% if img %}
+  <img src='{{ img }}' alt='{{ name }}' width="300">
+{% else %}
+  <p><em>Изображение отсутствует</em></p>
+{% endif %}
+{% if price %}
+<p>{{ price }} {{currency}}</p>
+{% endif %}
+{% if description %}
+  <div>
+    <h3>Описание:</h3>
+    <p>{{ description|safe }}</p>
+  </div>
+{% endif %}

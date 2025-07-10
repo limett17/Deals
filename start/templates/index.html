@@ -7,7 +7,8 @@
 <body>
     <h1>Здравствуйте, {{request.bitrix_user.first_name}} {{request.bitrix_user.last_name}}</h1>
     <a href="/deals/show_deals/">Последние сделки<br></a>
-    <a href="/deals/create_deal">Создать новую сделку</a>
+    <a href="/deals/create_deal">Создать новую сделку<br></a>
+    <a href="/products/generate_qr">Сгенерировать QR-код по ID товара<br></a>
 
     {% block title %}
     {% endblock %}
