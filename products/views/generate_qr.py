@@ -20,11 +20,7 @@ def generate_qr(request):
         if form.is_valid():
             product_id = form.cleaned_data['product_id']
             product, _ = get_product_from_bitrix(product_id)
-            # but = request.bitrix_user_token
-            # res = but.call_api_method('catalog.productImage.list', {
-            #     'productId': 10
-            # })
-            # print(res)
+
             if not product:
                 form.add_error('product_id', 'Товар не найден в Bitrix24.')
             else:
