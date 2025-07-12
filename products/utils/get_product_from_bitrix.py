@@ -1,27 +1,26 @@
-import requests
-from products.utils.webhook import WEBHOOK_URL
+from integration_utils.bitrix24.bitrix_token import BitrixToken
+from products.utils.webhook import web_hook_auth, domain
 
 
 def get_product_from_bitrix(product_id):
-    response = requests.get(WEBHOOK_URL+'crm.product.get.json', params={"ID": product_id})
-    data = response.json()
+    webhook_token = BitrixToken(
+        web_hook_auth=web_hook_auth,
+        domain=domain,
+    )
+
+    data = webhook_token.call_api_method('crm.product.get', params={"ID": product_id})
     product = data.get("result", {})
 
-    payload = {
+    data = webhook_token.call_api_method('catalog.productImage.list', params={
         "productId": product_id,
         "select": ["id", "name", "productId", "type", "createTime", "downloadUrl", "detailUrl"]
-    }
-    response = requests.post(WEBHOOK_URL+'catalog.productImage.list', json=payload)
-    data = response.json()
+    })
     image = data.get("result", {}).get('productImages', {})
     image = image[0]['detailUrl']
 
     if not product:
         return None
-    print({
-        'product': product,
-        'image': image
-    })
+
     return {
         'product': product,
         'image': image
