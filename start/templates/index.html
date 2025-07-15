@@ -1,21 +1,31 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body>
-    <h1>Здравствуйте, {{request.bitrix_user.first_name}} {{request.bitrix_user.last_name}}</h1>
-    <a href="/deals/show_deals/">Последние сделки<br></a>
-    <a href="/deals/create_deal">Создать новую сделку<br></a>
-    <a href="/products/generate_qr">Сгенерировать QR-код по ID товара<br></a>
-
-    {% block title %}
-    {% endblock %}
-    {% block header %}
-    {% endblock %}
-    {% block content %}
-    {% endblock %}
+    <div class="glass_wrapper menu ">
+    <div class="frosted"></div>
+        <h1>Здравствуйте, {{request.bitrix_user.first_name}} {{request.bitrix_user.last_name}}</h1>
+    <nav class="nav-bar">
+        <a href="/deals/show_deals/">Последние сделки<br></a>
+        <a href="/deals/create_deal">Создать новую сделку<br></a>
+        <a href="/products/generate_qr">Сгенерировать QR-код по ID товара<br></a>
+        <a href="/people/list">Список сотрудников</a>
+    </nav>
+        {% block title %}
+        {% endblock %}
+        {% block header %}
+        {% endblock %}
+        {% block content %}
+        {% endblock %}
+    </div>
 <script src="https://api.bitrix24.com/api/v1/"></script>
 </body>
 </html>

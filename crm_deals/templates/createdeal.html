@@ -1,35 +1,40 @@
-<h2>Создание сделки</h2>
+{% extends 'index.html' %}
+{% load static %}
+{% block header %}
+    <h2>Создание сделки</h2>
 
-{% if error %}
-    <p style="color: red;">Ошибка: {{ error }}</p>
-{% endif %}
+    {% if error %}
+        <p style="color: red;">Ошибка: {{ error }}</p>
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <form action="/deals/create_deal/" method="post">
+        {% csrf_token %}
+        <label>Название сделки:</label><br>
+        <input type="text" name="title"><br><br>
 
-<form action="/deals/create_deal/" method="post">
-    {% csrf_token %}
-    <label>Название сделки:</label><br>
-    <input type="text" name="title"><br><br>
+        <label>Сумма сделки:</label><br>
+        <input type="text" name="opportunity"><br><br>
 
-    <label>Сумма сделки:</label><br>
-    <input type="text" name="opportunity"><br><br>
+            <label for="delivery_date">Дата доставки:</label><br>
+        <input type="date" id="delivery_date" name="delivery_date"><br><br>
 
-        <label for="delivery_date">Дата доставки:</label><br>
-    <input type="date" id="delivery_date" name="delivery_date"><br><br>
+        <label for="delivery_time">Время доставки:</label><br>
+        <input type="text" id="delivery_time" name="delivery_time" placeholder="например, 10:00–12:00"><br><br>
 
-    <label for="delivery_time">Время доставки:</label><br>
-    <input type="text" id="delivery_time" name="delivery_time" placeholder="например, 10:00–12:00"><br><br>
+        <label for="delivery_method">Способ доставки:</label><br>
+        <select id="delivery_method" name="delivery_method">
+            <option value="">-- выберите --</option>
+            <option value="Курьер">Курьер</option>
+            <option value="Самовывоз">Самовывоз</option>
+            <option value="Почта">Почта</option>
+        </select><br><br>
 
-    <label for="delivery_method">Способ доставки:</label><br>
-    <select id="delivery_method" name="delivery_method">
-        <option value="">-- выберите --</option>
-        <option value="Курьер">Курьер</option>
-        <option value="Самовывоз">Самовывоз</option>
-        <option value="Почта">Почта</option>
-    </select><br><br>
-
-    <label for="delivery_instructions">Инструкции по доставке:</label><br>
-    <textarea id="delivery_instructions" name="delivery_instructions" rows="4"></textarea><br><br>
+        <label for="delivery_instructions">Инструкции по доставке:</label><br>
+        <textarea id="delivery_instructions" name="delivery_instructions" rows="4"></textarea><br><br>
 
 
-    <button type="submit">Создать сделку</button>
-</form>
-        <button onclick="document.location='{% url 'reload_start'%}'">Назад</button>
+        <button type="submit">Создать сделку</button>
+    </form>
+            <button onclick="document.location='{% url 'reload_start'%}'">Назад</button>
+{% endblock %}

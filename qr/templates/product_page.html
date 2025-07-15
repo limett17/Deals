@@ -1,16 +1,35 @@
-<h1>{{ id }} {{ name }}</h1>
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ name }} — Японский чай</title>
+    <link href="https://fonts.googleapis.com/css?family=Sawarabi+Mincho" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+<div class="glass_wrapper p_cont">
+    <div class="frosted"></div>
+        <div class="product_container">
+            {% if img %}
+                <img class="product-image" src="{{ img }}" alt="{{ name }}">
+            {% else %}
+                <p><em>Изображение отсутствует</em></p>
+            {% endif %}
+                <h1 class="product-title">{{ name }}</h1>
+                {% if description %}
+                    <div class="description">
+                        <p>{{ description|safe }}</p>
+                    </div>
+                {% endif %}
+                {% if price %}
+                    <div class="price">{{ price }} {{ currency }}</div>
+                {% endif %}
+        </div>
 
-{% if img %}
-  <img src='{{ img }}' alt='{{ name }}' width="300">
-{% else %}
-  <p><em>Изображение отсутствует</em></p>
-{% endif %}
-{% if price %}
-<p>{{ price }} {{currency}}</p>
-{% endif %}
-{% if description %}
-  <div>
-    <h3>Описание:</h3>
-    <p>{{ description|safe }}</p>
-  </div>
-{% endif %}
+</div>
+</body>
+</html>

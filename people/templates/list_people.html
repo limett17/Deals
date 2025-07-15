@@ -1,0 +1,90 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>Это список сотрудников</h2>
+    <button onclick="document.location='{% url 'reload_start'%}'">Назад</button>
+{#    <form method="post" action="{% url 'generate_calls' %}">#}
+{#        {% csrf_token %}#}
+{#        <button type="submit">Сгенерировать звонки</button>#}
+{#    </form>#}
+<style>
+ table {
+    border-collapse: collapse;
+    width: 100%;
+ }
+th, td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    font-weight: 200;
+}
+td {
+    text-align: center;
+}
+th{
+    font-weight: 500;
+}
+table a{
+    font-weight: 200;
+    text-decoration: none;
+    color: white;
+    transition: background 0.3s ease;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+table a:hover{
+    font-weight: 200;
+    background-color: rgba(255, 255, 255, 0.2);
+
+}
+</style>
+   <table>
+    <thead>
+        <tr>
+            <th>Сотрудник</th>
+            <th>Отдел</th>
+            {% for i in leader_indices %}
+                <th>Руководитель {{ i|add:1 }}</th>
+            {% endfor %}
+            <th>Звонков за 24ч</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table_rows %}
+        <tr>
+            <td>
+                 <a href="#" class="open-user" data-user-id="{{ row.employee_id }}">
+                    {{ row.employee_name }}
+                </a>
+            </td>
+            <td>{{ row.department_name }}</td>
+            {% for leader in row.leader_chain %}
+                <td>
+                    {% if leader %}
+                        <a href="#" class="open-user" data-user-id="{{ leader.id }}">{{ leader.name }}</a>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+
+            {% endfor %}
+            <td>{{ row.calls_count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    <script src="//api.bitrix24.com/api/v1/"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        BX24.init(function () {
+            document.querySelectorAll(".open-user").forEach(function (link) {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const userId = this.getAttribute("data-user-id");
+                    BX24.openPath(`/company/personal/user/${userId}/`);
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

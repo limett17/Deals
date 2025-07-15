@@ -1,5 +1,10 @@
-
+{% extends 'index.html' %}
+{% load static %}
+{% block header %}
 <h1>Сделка успешно создана!</h1>
+{% endblock %}
+{% block content %}
 <p>ID сделки: {{ deal_result.result }}</p>
 <a href="/deals/create_deal">Создать ещё одну</a>
 <button onclick="document.location='{% url 'reload_start'%}'">Назад</button>
+{% endblock %}

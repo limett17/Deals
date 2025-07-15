@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'start',
     'products',
     'qr',
+    'people',
 
     'integration_utils.bitrix24',
     'integration_utils.its_utils.app_gitpull',
@@ -117,6 +118,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / "Deals" / "static"]
+STATIC_ROOT = BASE_DIR / "Deals" / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

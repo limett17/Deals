@@ -8,4 +8,5 @@ urlpatterns = [
     path('deals/', include('crm_deals.urls')),
     path('products/', include('products.urls')),
     path('p/', include('qr.urls')),
+    path('people/', include('people.urls')),
 ]
