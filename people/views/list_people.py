@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from integration_utils.bitrix24.bitrix_user_auth.main_auth import main_auth
 from integration_utils.bitrix24.bitrix_token import BitrixToken
 from products.utils.webhook import web_hook_auth, domain
-from collections import defaultdict
+from datetime import datetime, timedelta, timezone
 
 
 @main_auth(on_cookies=True)
@@ -32,6 +32,21 @@ def list_people(request):
     }).get("result", {})
     # print(managers_by_dep)
 
+    # получаю исходящие звонки за последние сутки продолжительностью более 60 сек
+    now = datetime.now(timezone(timedelta(hours=3)))
+    since = now - timedelta(hours=24)
+
+    since_iso = since.isoformat()
+
+    calls = webhook_token.call_api_method('voximplant.statistic.get', {
+        'FILTER': {
+            'CALL_TYPE': '1',
+            '>CALL_DURATION': 60,
+            '>CALL_START_DATE': since_iso
+        }
+    }).get("result", {})
+
+
     def build_department_tree(departments):
         parent_map = {}
         name_map = {}
@@ -60,6 +75,16 @@ def list_people(request):
             current = parent_map.get(current)
         return chain
 
+    def count_calls(calls):
+        counter = {}
+        for call in calls:
+            user_id = str(call.get('PORTAL_USER_ID'))
+            if user_id in counter:
+                counter[user_id] += 1
+            else:
+                counter[user_id] = 1
+        return counter
+
     def build_table_rows(departments, employees_by_dep, managers_by_dep):
         parent_map, dep_name_map = build_department_tree(departments)
         user_map = build_user_map(employees_by_dep)
@@ -67,7 +92,7 @@ def list_people(request):
 
         rows = []
         max_depth = 0
-
+        calls_count = count_calls(calls)
         for dep_id, employees in employees_by_dep.items():
             for emp in employees:
                 if not emp.get("active"):
@@ -79,12 +104,15 @@ def list_people(request):
                 chain = get_leader_chain(dep_id, parent_map, managers_by_dep, emp_id)
                 max_depth = max(max_depth, len(chain))
 
+                callcount = calls_count.get(emp_id)
+
                 rows.append({
                     "employee_id": emp_id,
                     "employee_name": emp_name,
                     "department_id": dep_id,
                     "department_name": dep_name_map.get(dep_id, f"Отдел {dep_id}"),
-                    "leader_chain": chain
+                    "leader_chain": chain,
+                    "calls_count": callcount,
                 })
 
         return rows, max_depth

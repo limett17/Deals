@@ -6,9 +6,10 @@ from django.shortcuts import render, redirect
 from integration_utils.bitrix24.bitrix_user_auth.main_auth import main_auth
 from integration_utils.bitrix24.bitrix_token import BitrixToken
 from products.utils.webhook import web_hook_auth, domain
+import time
 
 USER_IDS = [1, 8, 10, 12, 14, 16]
-PHONE_NUMBERS = ["+79001234567", "+79007654321", "+79001112233", "+79009998877"]  # просто фиктивные номера
+PHONE_NUMBERS = ["+79001234567", "+79007654321", "+79001112233", "+79009998877", "+79009998866"]  # просто фиктивные номера
 
 
 @main_auth(on_cookies=True)
@@ -41,6 +42,7 @@ def generate_calls(request):
                 "SHOW": 0,
             })
 
+            time.sleep(0.5)
             call_id = data.get("result", {}).get("CALL_ID")
             if not call_id:
                 continue  # пропускаю, если не получилось зарегистрировать
@@ -54,4 +56,5 @@ def generate_calls(request):
                 "ADD_TO_CHAT": 0,
             })
 
+            time.sleep(0.5)
         return redirect("list_people")

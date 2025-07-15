@@ -4,10 +4,10 @@
 {% block content %}
     <h2>Это список сотрудников</h2>
     <button onclick="document.location='{% url 'reload_start'%}'">Назад</button>
-{#    <form method="post" action="{% url 'generate_calls' %}">#}
-{#        {% csrf_token %}#}
-{#        <button type="submit">Сгенерировать звонки</button>#}
-{#    </form>#}
+    <form method="post" action="{% url 'generate_calls' %}">
+        {% csrf_token %}
+        <button type="submit">Сгенерировать звонки</button>
+    </form>
 <style>
  table {
     border-collapse: collapse;
