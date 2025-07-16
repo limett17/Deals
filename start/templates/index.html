@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=59fdd512-90eb-464b-9605-bc86a1bc89a7&lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
     <div class="glass_wrapper menu ">
@@ -18,6 +19,7 @@
         <a href="/deals/create_deal">Создать новую сделку<br></a>
         <a href="/products/generate_qr">Сгенерировать QR-код по ID товара<br></a>
         <a href="/people/list">Список сотрудников</a>
+        <a href="/company/map">Карта компаний</a>
     </nav>
         {% block title %}
         {% endblock %}
