@@ -1,0 +1,33 @@
+{% extends 'contacts.html' %}
+{% load static %}
+{% block contacts %}
+    <h3>Выберите нужные фильтры и нажмите "Экпортировать"</h3>
+    <form method="post">
+        {% csrf_token %}
+        <label for="export_date_from">Дата от:<br>
+            <input type="date" id="export_date_from"><br>
+        </label>
+        <label for="export_date_to">Дата до:<br>
+            <input type="date" id="export_date_to"><br>
+        </label>
+        <label for="company_name">По названию компании:<br>
+            <input type="text" id="company_name"><br>
+        </label>
+        <label for="only_phone_number">Только с наличием телефона:
+            <input type="checkbox" id="only_phone_number">
+        </label>
+        <br>
+        <label for="only_email">Только с наличием email:
+            <input type="checkbox" id="only_email">
+        </label>
+        <br>
+        <label for="export_format">Формат экспорта:<br>
+            <select name="export_format" id="export_format">
+                <option value="csv">CSV</option>
+                <option value="xlsx">Excel (XLSX)</option>
+            </select>
+        </label>
+        <br>
+        <button type="submit">Экспортировать</button>
+    </form>
+{% endblock %}

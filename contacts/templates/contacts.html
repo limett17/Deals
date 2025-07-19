@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+    <h2>Контакты</h2>
+    <button onclick="document.location='{% url 'reload_start'%}'">Назад</button>
+{% endblock %}
+
+{% block content %}
+    <a href="{% url 'import_contacts' %}">Импортировать</a>
+    <a href="{% url 'export_contacts' %}">Экпортировать</a>
+    {% block contacts %}
+    {% endblock %}
+{% endblock %}

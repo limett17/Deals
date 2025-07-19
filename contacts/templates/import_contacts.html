@@ -1,0 +1,15 @@
+{% extends 'contacts.html' %}
+{% load static %}
+{% block contacts %}
+    <h3>Импорт контактов</h3>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" accept=".csv,.xlsx" required>
+        <button type="submit">Загрузить</button>
+    </form>
+{% endblock %}
