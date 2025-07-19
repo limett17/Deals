@@ -5,20 +5,20 @@
     <form method="post">
         {% csrf_token %}
         <label for="export_date_from">Дата от:<br>
-            <input type="date" id="export_date_from"><br>
+            <input type="date" id="export_date_from" name="export_date_from"><br>
         </label>
         <label for="export_date_to">Дата до:<br>
-            <input type="date" id="export_date_to"><br>
+            <input type="date" id="export_date_to" name="export_date_to"><br>
         </label>
         <label for="company_name">По названию компании:<br>
-            <input type="text" id="company_name"><br>
+            <input type="text" id="company_name" name="company_name"><br>
         </label>
         <label for="only_phone_number">Только с наличием телефона:
-            <input type="checkbox" id="only_phone_number">
+            <input type="checkbox" id="only_phone_number" name="only_phone_number">
         </label>
         <br>
         <label for="only_email">Только с наличием email:
-            <input type="checkbox" id="only_email">
+            <input type="checkbox" id="only_email" name="only_email">
         </label>
         <br>
         <label for="export_format">Формат экспорта:<br>
