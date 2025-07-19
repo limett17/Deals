@@ -3,12 +3,10 @@ from datetime import datetime
 
 def build_contact_filters_from_request(request, company_id):
     filters = {}
-    print(request.POST)
     export_date_from = request.POST.get('export_date_from')
     export_date_to = request.POST.get('export_date_to')
     only_phone_number = request.POST.get('only_phone_number')
     only_email = request.POST.get('only_email')
-    print(export_date_to)
     if company_id:
         filters['COMPANY_ID'] = company_id
 
