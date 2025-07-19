@@ -6,8 +6,10 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url 'import_contacts' %}">Импортировать</a>
-    <a href="{% url 'export_contacts' %}">Экпортировать</a>
+    <nav>
+        <a href="{% url 'import_contacts' %}">Импортировать</a>
+        <a href="{% url 'export_contacts' %}">Экпортировать</a>
+    </nav>
     {% block contacts %}
     {% endblock %}
 {% endblock %}

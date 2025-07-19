@@ -14,7 +14,7 @@ body{
     flex-direction: column;
     text-decoration: none;
 }
-a{
+nav a{
     text-decoration: none;
     color: white;
     font-weight: 500;
@@ -22,7 +22,7 @@ a{
     border-radius: 8px;
     transition: background 0.3s ease;
 }
-a:hover{
+nav a:hover{
     background-color: rgba(255, 255, 255, 0.2);
     font-weight: bold;
 }
@@ -135,4 +135,33 @@ th, td, tr {
 }
 td{
     text-align: center;
+}
+
+/*------------- FORM -------------*/
+.form-glass form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input,
+textarea,
+select {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 16px;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7);
 }
