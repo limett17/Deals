@@ -24,11 +24,10 @@ def show_recent_deals(request):
     })['result']
 
     recent_deals = res[:10]
-    #print(recent_deals)
     for deal in recent_deals:
         deal['DATE_CREATE'] = format_date(deal['DATE_CREATE'])
         if "UF_CRM_1752056545" in deal:
             deal["UF_CRM_1752056545"] = format_date(deal["UF_CRM_1752056545"])
 
-    return render(request, 'showrecentdeals.html', locals())
+    return render(request, 'showrecentdeals.html', {"recent_deals": recent_deals})
 

@@ -125,4 +125,7 @@ def list_people(request):
         padded_chain = chain + [None] * (max_leader_depth - len(chain))
         row['leader_chain'] = padded_chain
 
-    return render(request, 'list_people.html', locals())
+    return render(request, 'list_people.html', {
+        "table_rows": table_rows,
+        "leader_indices": leader_indices,
+    })
