@@ -25,6 +25,6 @@ def import_contacts(request):
                                  f"Импорт завершен с частичными ошибками: {success_count} успешных, {error_count} неудач.")
                 request.session["import_errors"] = result.errors
 
-            return redirect('contacts')  # или 'contacts_import_summary'
+            return redirect('contacts')
 
     return render(request, 'import_contacts.html')

@@ -1,35 +1,12 @@
 from django.shortcuts import render
-
-from contacts.services.create_contact_list import create_contact_list
 from integration_utils.bitrix24.bitrix_user_auth.main_auth import main_auth
 from contacts.services.filters import build_contact_filters_from_request
 from contacts.services.parsers.generate_csv_response import generate_csv_response
-from contacts.services.parsers.generate_xslx_response import generate_xlsx_response
-from contacts.services.parsers.stream_contacts import stream_contacts
+from contacts.services.parsers.generate_xlsx_response import generate_xlsx_response
+from contacts.services.bitrix import stream_contacts
 from contacts.services.parsers.generate_csv_response import generate_csv_response_from_stream
-
-
-def get_company_id_if_exists(but, company_name):
-    companies = but.call_api_method("crm.company.list", {
-        "filter": {"TITLE": company_name},
-        "select": ["ID"]
-    })["result"]
-
-    if not companies:
-        return None
-
-    company_id = companies[0]["ID"]
-
-    contacts = but.call_api_method("crm.contact.list", {
-        "filter": {"COMPANY_ID": company_id},
-        "select": ["ID"],
-        "limit": 1
-    })["result"]
-
-    if not contacts:
-        return None
-
-    return company_id
+from contacts.services.parsers.generate_xlsx_response import generate_xlsx_response_from_stream
+from contacts.services.bitrix import get_company_id_if_exists
 
 
 @main_auth(on_cookies=True)
@@ -56,8 +33,9 @@ def export_contacts(request):
         contact_generator = stream_contacts(but, filters)
 
         if file_type == "xlsx":
-            contact_list = list(contact_generator)
-            return generate_xlsx_response(contact_list)
+            # contact_list = list(contact_generator)
+            # return generate_xlsx_response(contact_list)
+            return generate_xlsx_response_from_stream(contact_generator)
         else:
             return generate_csv_response_from_stream(contact_generator)
 

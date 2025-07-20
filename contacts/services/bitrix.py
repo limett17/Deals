@@ -6,6 +6,8 @@ from integration_utils.bitrix24.functions.batch_api_call import _batch_api_call
 company_cache = {}  # ключ: название компании, значение: ID
 
 
+# эта функция используется при импорте для создания компании
+# для контакта, если она указана в файле
 def get_or_create_company_id(but, title):
     title = title.strip()
 
@@ -34,10 +36,12 @@ def get_or_create_company_id(but, title):
     return company_id
 
 
-def batch_create_contacts(but, contacts, chunk_size=50):
-    methods = []
+def batch_create_contacts(but, contacts_generator, chunk_size=50):
+    batch = []
+    successes = []
+    errors = []
 
-    for i, contact in enumerate(contacts):
+    for i, contact in enumerate(contacts_generator):
         fields = {
             "NAME": contact.get("NAME", ""),
             "LAST_NAME": contact.get("LAST_NAME", ""),
@@ -51,28 +55,103 @@ def batch_create_contacts(but, contacts, chunk_size=50):
             if company_id:
                 fields["COMPANY_ID"] = company_id
 
-        methods.append((
+        batch.append((
             f"contact_{i}",
             "crm.contact.add",
             {"fields": fields}
         ))
 
-    responses = _batch_api_call(
-        methods=methods,
-        bitrix_user_token=but,
-        function_calling_from_bitrix_user_token_think_before_use=True,
-        chunk_size=chunk_size
-    )
-    print(responses)
-    return responses
+        if len(batch) >= chunk_size:
+            result = _batch_api_call(
+                methods=batch,
+                bitrix_user_token=but,
+                function_calling_from_bitrix_user_token_think_before_use=True,
+                chunk_size=chunk_size
+            )
+            for call_key, call_result in result.items():
+                if "error" in call_result:
+                    errors.append({"key": call_key, "error": call_result["error"]})
+                else:
+                    successes.append(call_result["result"])
+            batch.clear()
+
+    if batch:
+        result = _batch_api_call(
+            methods=batch,
+            bitrix_user_token=but,
+            function_calling_from_bitrix_user_token_think_before_use=True,
+            chunk_size=chunk_size
+        )
+        for call_key, call_result in result.items():
+            if "error" in call_result:
+                errors.append({"key": call_key, "error": call_result["error"]})
+            else:
+                successes.append(call_result["result"])
+
+        return successes, errors
 
 
-def batch_get_contacts(but, chunk_size=50):
+def stream_contacts(but, filters):
+    start = 0
+    company_cache = {}
 
-    responses = _batch_api_call(
-        methods=methods,
-        bitrix_user_token=but,
-        function_calling_from_bitrix_user_token_think_before_use=True,
-        chunk_size=chunk_size
-    )
-    return responses
+    while True:
+        res = but.call_api_method("crm.contact.list", {
+            "filter": filters,
+            "select": ["ID", "NAME", "LAST_NAME", "EMAIL", "PHONE", "COMPANY_ID"],
+            "start": start
+        })
+
+        batch = res.get("result", [])
+        if not batch:
+            break
+
+        for contact in batch:
+            company_id = contact.get("COMPANY_ID")
+            company_name = ""
+
+            if company_id:
+                if company_id in company_cache:
+                    company_name = company_cache[company_id]
+                else:
+                    company = but.call_api_method("crm.company.get", {"id": company_id}).get("result")
+                    company_name = company.get("TITLE", "") if company else ""
+                    company_cache[company_id] = company_name
+
+            yield {
+                "имя": contact.get("NAME", ""),
+                "фамилия": contact.get("LAST_NAME", ""),
+                "номер телефона": contact.get("PHONE", [{}])[0].get("VALUE", "") if contact.get("PHONE") else "",
+                "email": contact.get("EMAIL", [{}])[0].get("VALUE", "") if contact.get("EMAIL") else "",
+                "компания": company_name
+            }
+
+        if "next" in res:
+            start = res["next"]
+        else:
+            break
+
+
+# эта функция используется при экпорте для проверки наличия
+# введенной пользователем компании и звонков у нее
+def get_company_id_if_exists(but, company_name):
+    companies = but.call_api_method("crm.company.list", {
+        "filter": {"TITLE": company_name},
+        "select": ["ID"]
+    })["result"]
+
+    if not companies:
+        return None
+
+    company_id = companies[0]["ID"]
+
+    contacts = but.call_api_method("crm.contact.list", {
+        "filter": {"COMPANY_ID": company_id},
+        "select": ["ID"],
+        "limit": 1
+    })["result"]
+
+    if not contacts:
+        return None
+
+    return company_id

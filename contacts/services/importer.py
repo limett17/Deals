@@ -17,5 +17,6 @@ def import_contacts_from_file(but, uploaded_file):
     else:
         raise ValueError("Неподдерживаемый формат файла")
 
-    result = batch_create_contacts(but, contacts)
-    return result
+    successes, errors = batch_create_contacts(but, contacts)
+    return ImportResult(successes, errors, all_ok=(len(errors) == 0))
+

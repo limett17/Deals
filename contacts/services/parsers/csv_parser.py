@@ -1,17 +1,16 @@
 import csv
-from io import TextIOWrapper
+import io
 
 
 def parse_csv(file):
-    reader = csv.DictReader(TextIOWrapper(file, encoding='utf-8'))
-    # файл читается как список словарей и конвертируется в текст (?)
-    return [
-        {
-            'NAME': row['имя'],
-            'LAST_NAME': row['фамилия'],
-            'PHONE': [{'VALUE': row['номер телефона'], 'VALUE_TYPE': 'WORK'}],
-            'EMAIL': [{'VALUE': row['почта'], 'VALUE_TYPE': 'WORK'}],
-            'COMPANY_TITLE': row['компания']
+    text = io.TextIOWrapper(file, encoding='utf-8')
+    reader = csv.DictReader(text)
+
+    for row in reader:
+        yield {
+            "NAME": row.get("имя", ""),
+            "LAST_NAME": row.get("фамилия", ""),
+            "PHONE": [{"VALUE": row.get("номер телефона", ""), "VALUE_TYPE": "WORK"}] if row.get("номер телефона") else [],
+            "EMAIL": [{"VALUE": row.get("email", ""), "VALUE_TYPE": "WORK"}] if row.get("email") else [],
+            "COMPANY_TITLE": row.get("компания", "")
         }
-        for row in reader
-    ]
