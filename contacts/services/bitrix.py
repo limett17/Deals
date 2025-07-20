@@ -65,3 +65,14 @@ def batch_create_contacts(but, contacts, chunk_size=50):
     )
     print(responses)
     return responses
+
+
+def batch_get_contacts(but, chunk_size=50):
+
+    responses = _batch_api_call(
+        methods=methods,
+        bitrix_user_token=but,
+        function_calling_from_bitrix_user_token_think_before_use=True,
+        chunk_size=chunk_size
+    )
+    return responses

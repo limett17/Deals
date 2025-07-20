@@ -1,37 +1,6 @@
 {% extends 'contacts.html' %}
 {% load static %}
 {% block contacts %}
-    <div class="form-glass">
-        <h3>Выберите нужные фильтры и нажмите "Экпортировать"</h3>
-        <form method="post">
-            {% csrf_token %}
-            <label for="export_date_from">Дата от:<br>
-                <input type="date" id="export_date_from" name="export_date_from"><br>
-            </label>
-            <label for="export_date_to">Дата до:<br>
-                <input type="date" id="export_date_to" name="export_date_to"><br>
-            </label>
-            <label for="company_name">По названию компании:<br>
-                <input type="text" id="company_name" name="company_name"><br>
-            </label>
-            <label for="only_phone_number" class="checkbox-label">Только с наличием телефона:
-                <input type="checkbox" id="only_phone_number" name="only_phone_number">
-            </label>
-            <br>
-            <label for="only_email" class="checkbox-label">Только с наличием email:
-                <input type="checkbox" id="only_email" name="only_email">
-            </label>
-            <br>
-            <label for="export_format" >Формат экспорта:<br>
-                <select name="export_format" id="export_format">
-                    <option value="csv">CSV</option>
-                    <option value="xlsx">Excel (XLSX)</option>
-                </select>
-            </label>
-            <br>
-            <button type="submit">Экспортировать</button>
-        </form>
-    </div>
     <style>
         input:not([type="checkbox"]),
         textarea,
@@ -114,4 +83,36 @@
             transform: rotate(45deg);
         }
     </style>
+    <div class="form-glass">
+        <h3>Выберите нужные фильтры и нажмите "Экпортировать"</h3>
+        <form method="post">
+            {% csrf_token %}
+            <label for="export_date_from">Дата от:<br>
+                <input type="date" id="export_date_from" name="export_date_from"><br>
+            </label>
+            <label for="export_date_to">Дата до:<br>
+                <input type="date" id="export_date_to" name="export_date_to"><br>
+            </label>
+            <label for="company_name">По названию компании:<br>
+                <input type="text" id="company_name" name="company_name"><br>
+            </label>
+            <label for="only_phone_number" class="checkbox-label">Только с наличием телефона:
+                <input type="checkbox" id="only_phone_number" name="only_phone_number" style="width: 20px;">
+            </label>
+            <br>
+            <label for="only_email" class="checkbox-label">Только с наличием email:
+                <input type="checkbox" id="only_email" name="only_email" style="width: 20px;">
+            </label>
+            <br>
+            <label for="export_format" >Формат экспорта:<br>
+                <select name="export_format" id="export_format">
+                    <option value="csv">CSV</option>
+                    <option value="xlsx">Excel (XLSX)</option>
+                </select>
+            </label>
+            <br>
+            <button type="submit">Экспортировать</button>
+        </form>
+    </div>
+
 {% endblock %}
