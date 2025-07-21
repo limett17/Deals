@@ -1,5 +1,4 @@
-from integration_utils.bitrix24.bitrix_user_auth.main_auth import main_auth
-from integration_utils.bitrix24.bitrix_token import BitrixToken
+from integration_utils.bitrix24.functions import batch_api_call
 from integration_utils.bitrix24.functions.batch_api_call import _batch_api_call
 
 # кэш для компаний
@@ -36,12 +35,74 @@ def get_or_create_company_id(but, title):
     return company_id
 
 
+# функция поиска дубликатов
+def find_duplicate_contact_id(but, phone=None, email=None):
+    contact_ids = set()
+
+    if phone:
+        res = but.call_api_method("crm.duplicate.findbycomm", {
+            "type": "PHONE",
+            "values": [phone],
+            "entity_type": "CONTACT"
+        })
+        if res.get('result'):
+            contact_ids.update(res.get("result", {}).get("CONTACT", []))
+
+    if email:
+        res = but.call_api_method("crm.duplicate.findbycomm", {
+            "type": "EMAIL",
+            "values": [email],
+            "entity_type": "CONTACT"
+        })
+        if res.get('result'):
+            contact_ids.update(res.get("result", {}).get("CONTACT", []))
+
+    return list(contact_ids)
+
+
+# получение контакта по id
+def get_contact_by_id(but, contact_id):
+    res = but.call_api_method("crm.contact.get", {"id": contact_id})
+    return res.get("result")
+
+
 def batch_create_contacts(but, contacts_generator, chunk_size=50):
     batch = []
     successes = []
     errors = []
 
     for i, contact in enumerate(contacts_generator):
+        if not contact.get("PHONE") and not contact.get("EMAIL"):
+            continue
+
+        phone = contact["PHONE"][0]["VALUE"] if contact.get("PHONE") else None
+        email = contact["EMAIL"][0]["VALUE"] if contact.get("EMAIL") else None
+
+        duplicate_ids = find_duplicate_contact_id(but, phone, email)
+        is_duplicate = False
+
+        for dup_id in duplicate_ids:
+            existing = get_contact_by_id(but, dup_id)
+            if existing:
+                same_name = existing.get("NAME", "").strip() == contact.get("NAME", "").strip()
+                same_last_name = existing.get("LAST_NAME", "").strip() == contact.get("LAST_NAME", "").strip()
+
+                existing_company_id = existing.get("COMPANY_ID")
+                existing_company_title = ""
+                if existing_company_id:
+                    company = but.call_api_method("crm.company.get", {"id": existing_company_id})
+                    existing_company_title = company.get("result", {}).get("TITLE", "").strip()
+
+                same_company = existing_company_title == contact.get("COMPANY_TITLE", "").strip()
+
+                if same_name and same_last_name and same_company:
+                    is_duplicate = True
+                    break
+
+        if is_duplicate:
+            print('Такой контакт уже существует')
+            continue
+
         fields = {
             "NAME": contact.get("NAME", ""),
             "LAST_NAME": contact.get("LAST_NAME", ""),
@@ -89,7 +150,7 @@ def batch_create_contacts(but, contacts_generator, chunk_size=50):
                 successes.append(call_result["result"])
 
         return successes, errors
-
+    return successes, errors
 
 def stream_contacts(but, filters):
     start = 0

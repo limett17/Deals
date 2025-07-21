@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from integration_utils.bitrix24.bitrix_user_auth.main_auth import main_auth
 from contacts.services.filters import build_contact_filters_from_request
-from contacts.services.parsers.generate_csv_response import generate_csv_response
-from contacts.services.parsers.generate_xlsx_response import generate_xlsx_response
+# from contacts.services.parsers.generate_csv_response import generate_csv_response
+# from contacts.services.parsers.generate_xlsx_response import generate_xlsx_response
 from contacts.services.bitrix import stream_contacts
 from contacts.services.parsers.generate_csv_response import generate_csv_response_from_stream
 from contacts.services.parsers.generate_xlsx_response import generate_xlsx_response_from_stream

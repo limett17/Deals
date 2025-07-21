@@ -14,7 +14,7 @@ def parse_xlsx(file):
         "имя": normalized_headers.index("имя") if "имя" in normalized_headers else None,
         "фамилия": normalized_headers.index("фамилия") if "фамилия" in normalized_headers else None,
         "номер телефона": normalized_headers.index("номер телефона") if "номер телефона" in normalized_headers else None,
-        "почта": normalized_headers.index("почта") if "почта" in normalized_headers else None,
+        "почта": normalized_headers.index("email") if "email" in normalized_headers else None,
         "компания": normalized_headers.index("компания") if "компания" in normalized_headers else None,
     }
 
